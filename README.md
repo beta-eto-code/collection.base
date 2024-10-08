@@ -27,4 +27,3 @@ $uniqueAges = $collection->unique('age'); // все не повторяющие�
 
 $firstItem = $collection->first(); // первый элемент коллекции
 ```
-
