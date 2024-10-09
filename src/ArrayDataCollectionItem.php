@@ -27,6 +27,10 @@ class ArrayDataCollectionItem implements CollectionItemInterface
     {
         return $this->data[$key] ?? null;
     }
+    public function setValueByKey(string $key, mixed $value): void
+    {
+        $this->data[$key] = $value;
+    }
 
     public function jsonSerialize(): array
     {

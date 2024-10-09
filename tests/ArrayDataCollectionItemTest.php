@@ -32,6 +32,13 @@ class ArrayDataCollectionItemTest extends TestCase
         $this->assertNull($item->getValueByKey('other_key'));
     }
 
+    public function testSetValueByKey()
+    {
+        $item = new ArrayDataCollectionItem(['key' => 'value']);
+        $item->setValueByKey('key', 'new value');
+        $this->assertEquals('new value', $item->getValueByKey('key'));
+    }
+
     public function testJsonSerialize()
     {
         $item = new ArrayDataCollectionItem(['key' => 'value']);

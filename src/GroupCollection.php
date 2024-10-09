@@ -67,6 +67,16 @@ class GroupCollection extends Collection implements GroupCollectionInterface
 
         return null;
     }
+    public function setValueByKey(string $key, mixed $value): void
+    {
+        if ($key === 'key') {
+            $this->key = $value;
+        }
+
+        if ($key === 'value') {
+            $this->value = $value;
+        }
+    }
 
     public function jsonSerialize(): array
     {
