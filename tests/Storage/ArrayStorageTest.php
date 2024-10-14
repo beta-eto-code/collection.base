@@ -36,6 +36,52 @@ class ArrayStorageTest extends TestCase
         $this->assertCount(2, iterator_to_array($storage->getIterator()));
     }
 
+    public function testRemove()
+    {
+        $storage = new ArrayStorage();
+        $firstItem = new ArrayDataCollectionItem(['id' => 1]);
+        $storage->append($firstItem);
+
+        $secondItem = new ArrayDataCollectionItem(['id' => 2]);
+        $storage->append($secondItem);
+        $this->assertCount(2, iterator_to_array($storage->getIterator()));
+
+        $storage->remove(new ArrayDataCollectionItem(['id' => 1]));
+        $this->assertCount(2, iterator_to_array($storage->getIterator()));
+
+        $storage->remove($firstItem);
+        $this->assertCount(1, iterator_to_array($storage->getIterator()));
+
+        $storage->remove(new ArrayDataCollectionItem(['id' => 2]));
+        $this->assertCount(1, iterator_to_array($storage->getIterator()));
+
+        $storage->remove($secondItem);
+        $this->assertEmpty(iterator_to_array($storage->getIterator()));
+    }
+
+    public function testRemoveWithCheckDuplicates()
+    {
+        $storage = new ArrayStorage(true);
+        $firstItem = new ArrayDataCollectionItem(['id' => 1]);
+        $storage->append($firstItem);
+
+        $secondItem = new ArrayDataCollectionItem(['id' => 2]);
+        $storage->append($secondItem);
+        $this->assertCount(2, iterator_to_array($storage->getIterator()));
+
+        $storage->remove(new ArrayDataCollectionItem(['id' => 1]));
+        $this->assertCount(2, iterator_to_array($storage->getIterator()));
+
+        $storage->remove($firstItem);
+        $this->assertCount(1, iterator_to_array($storage->getIterator()));
+
+        $storage->remove(new ArrayDataCollectionItem(['id' => 2]));
+        $this->assertCount(1, iterator_to_array($storage->getIterator()));
+
+        $storage->remove($secondItem);
+        $this->assertEmpty(iterator_to_array($storage->getIterator()));
+    }
+
     public function testGetIterator()
     {
         $storage = new ArrayStorage();

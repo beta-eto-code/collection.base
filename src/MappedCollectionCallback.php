@@ -46,13 +46,4 @@ class MappedCollectionCallback extends MappedCollection
         $indexKey = ($this->fn)($item);
         $this->list[$indexKey] = $item;
     }
-
-    /**
-     * @param CollectionItemInterface $item
-     */
-    public function remove(CollectionItemInterface $item)
-    {
-        $indexKey = ($this->fn)($item);
-        unset($this->list[$indexKey]);
-    }
 }

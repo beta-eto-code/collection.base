@@ -6,6 +6,7 @@ use Collection\Base\ArrayDataCollectionItem;
 use Collection\Base\Collection;
 use Collection\Base\Interfaces\CollectionInterface;
 use Collection\Base\Interfaces\CollectionItemInterface;
+use EmptyIterator;
 use Exception;
 use Iterator;
 use PHPUnit\Framework\TestCase;
@@ -17,6 +18,7 @@ class CollectionTest extends TestCase
      */
     protected CollectionInterface $collection;
     protected array $originalData;
+    protected array $collectionItems = [];
 
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {
@@ -38,21 +40,42 @@ class CollectionTest extends TestCase
                 'boolean' => false,
             ],
         ];
-        $this->collection = $this->initCollection($this->originalData);
+        $this->collection = $this->initCollection($this->originalData, true);
     }
 
     /**
      * @param array $data
+     * @param bool $withResetItems
      * @return Collection
      */
-    protected function initCollection(array $data): CollectionInterface
+    protected function initCollection(array $data, bool $withResetItems = false): CollectionInterface
     {
-        $collection = new Collection();
-        foreach ($data as $item) {
-            $collection->append(new ArrayDataCollectionItem($item));
+        if ($withResetItems) {
+            $this->collectionItems = [];
+        }
+
+        $collection = $this->createCollection();
+        foreach ($this->getCollectionIterator($data) as $collectionItem) {
+            if ($withResetItems) {
+                $this->collectionItems[] = $collectionItem;
+            }
+            $collection->append($collectionItem);
         }
 
         return $collection;
+    }
+
+    protected function createCollection(): CollectionInterface
+    {
+        return new Collection();
+    }
+
+    protected function getCollectionIterator(array $data): Iterator
+    {
+        foreach ($data as $item) {
+            yield new ArrayDataCollectionItem($item);
+        }
+        return new EmptyIterator();
     }
 
 
@@ -144,7 +167,7 @@ class CollectionTest extends TestCase
             }
         }
 
-        $this->assertEquals($this->collection->findByKey('id', 1), $assertValue);
+        $this->assertEquals($assertValue, $this->collection->findByKey('id', 1));
     }
 
     public function testUnique()
@@ -205,6 +228,26 @@ class CollectionTest extends TestCase
 
         $this->assertEquals(4, $this->collection->count());
         $this->assertEquals($lastModel, $lastModel);
+    }
+
+    public function testRemove()
+    {
+        $this->assertEquals(3, $this->collection->count());
+
+        $this->collection->remove(new ArrayDataCollectionItem($this->originalData[0]));
+        $this->assertEquals(3, $this->collection->count());
+
+        $firstItem = $this->collectionItems[0];
+        $this->collection->remove($firstItem);
+        $this->assertEquals(2, $this->collection->count());
+
+        $secondItem = $this->collectionItems[1];
+        $this->collection->remove($secondItem);
+        $this->assertEquals(1, $this->collection->count());
+
+        $thirdItem= $this->collectionItems[2];
+        $this->collection->remove($thirdItem);
+        $this->assertEquals(0, $this->collection->count());
     }
 
     public function testGroup()

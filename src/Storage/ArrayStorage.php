@@ -13,7 +13,7 @@ class ArrayStorage implements CollectionStorageInterface
      * @var CollectionItemInterface[]
      */
     protected array $list;
-    private bool $needCheckDuplicate;
+    protected bool $needCheckDuplicate;
 
     public function __construct(bool $needCheckDuplicate = false)
     {
@@ -44,6 +44,27 @@ class ArrayStorage implements CollectionStorageInterface
         }
 
         $this->list[] = $item;
+    }
+
+    public function remove(CollectionItemInterface $item): void
+    {
+        if ($this->needCheckDuplicate) {
+            $id = spl_object_id($item);
+            unset($this->list[$id]);
+            return;
+        }
+
+        $indexForUnset = [];
+        foreach ($this->list as $i => $listItem) {
+            if ($listItem === $item) {
+                $indexForUnset[] = $i;
+            }
+        }
+
+        foreach ($indexForUnset as $i) {
+            unset($this->list[$i]);
+        }
+        unset($indexForUnset);
     }
 
     public function count(): int

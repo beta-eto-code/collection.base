@@ -37,6 +37,50 @@ class IteratorStorageTest extends TestCase
         $this->assertCount(4, iterator_to_array($storage->getIterator()));
     }
 
+    public function testRemove()
+    {
+        $firstItem = new ArrayDataCollectionItem(['id' => 1]);
+        $secondItem = new ArrayDataCollectionItem(['id' => 2]);
+        $storage = new IteratorStorage($this->createIterator($firstItem, $secondItem));
+        $this->assertCount(2, iterator_to_array($storage->getIterator()));
+
+        $storage = new IteratorStorage($this->createIterator($firstItem, $secondItem));
+        $storage->remove(new ArrayDataCollectionItem(['id' => 1]));
+        $this->assertCount(2, iterator_to_array($storage->getIterator()));
+
+        $storage = new IteratorStorage($this->createIterator($firstItem, $secondItem));
+        $storage->remove($firstItem);
+        $this->assertCount(1, iterator_to_array($storage->getIterator()));
+
+        $storage->remove(new ArrayDataCollectionItem(['id' => 2]));
+        $this->assertCount(1, iterator_to_array($storage->getIterator()));
+
+        $storage->remove($secondItem);
+        $this->assertEmpty(iterator_to_array($storage->getIterator()));
+    }
+
+    public function testRemoveWithCheckDuplicates()
+    {
+        $firstItem = new ArrayDataCollectionItem(['id' => 1]);
+        $secondItem = new ArrayDataCollectionItem(['id' => 2]);
+        $storage = new IteratorStorage($this->createIterator($firstItem, $secondItem), true);
+        $this->assertCount(2, iterator_to_array($storage->getIterator()));
+
+        $storage = new IteratorStorage($this->createIterator($firstItem, $secondItem), true);
+        $storage->remove(new ArrayDataCollectionItem(['id' => 1]));
+        $this->assertCount(2, iterator_to_array($storage->getIterator()));
+
+        $storage = new IteratorStorage($this->createIterator($firstItem, $secondItem), true);
+        $storage->remove($firstItem);
+        $this->assertCount(1, iterator_to_array($storage->getIterator()));
+
+        $storage->remove(new ArrayDataCollectionItem(['id' => 2]));
+        $this->assertCount(1, iterator_to_array($storage->getIterator()));
+
+        $storage->remove($secondItem);
+        $this->assertEmpty(iterator_to_array($storage->getIterator()));
+    }
+
     public function testGetIterator()
     {
         $storage = new IteratorStorage($this->createIterator());
@@ -56,9 +100,16 @@ class IteratorStorageTest extends TestCase
         $this->assertTrue($iterator->current()->assertValueByKey('id', 2));
     }
 
-    private function createIterator(): Iterator
+    private function createIterator(ArrayDataCollectionItem ...$itemList): Iterator
     {
-        yield new ArrayDataCollectionItem(['id' => 1]);
-        yield new ArrayDataCollectionItem(['id' => 2]);
+        if (empty($itemList)) {
+            yield new ArrayDataCollectionItem(['id' => 1]);
+            yield new ArrayDataCollectionItem(['id' => 2]);
+            return;
+        }
+
+        foreach ($itemList as $item) {
+            yield $item;
+        }
     }
 }

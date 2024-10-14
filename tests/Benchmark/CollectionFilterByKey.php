@@ -2,12 +2,12 @@
 
 namespace Collection\Base\Tests\Benchmark;
 
-use Collection\Base\Interfaces\CollectionStorageInterface;
+use Collection\Base\Interfaces\CollectionInterface;
 
 class CollectionFilterByKey extends BaseCollectionBenchmark
 {
-    protected function runBenchmark(CollectionStorageInterface $storage): void
+    protected function runBenchmark(CollectionInterface $collection): void
     {
-        $this->createCollection($storage, 300)->filterBykey('value', 'value22', 'value44', 'value144');
+        $collection->filterBykey('value', 'value22', 'value44', 'value144');
     }
 }

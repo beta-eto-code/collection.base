@@ -6,18 +6,14 @@ use Collection\Base\ArrayDataCollectionItem;
 use Collection\Base\Interfaces\CollectionInterface;
 use Collection\Base\Interfaces\CollectionItemInterface;
 use Collection\Base\MappedCollection;
+use Collection\Base\MappedCollectionCallback;
 use Iterator;
 
 class MappedCollectionTest extends CollectionTest
 {
-    protected function initCollection(array $data): CollectionInterface
+    protected function createCollection(): CollectionInterface
     {
-        $list = [];
-        foreach ($data as $item) {
-            $list[] = new ArrayDataCollectionItem($item);
-        }
-
-        return new MappedCollection($list, 'id');
+        return new MappedCollection([], 'id');
     }
 
     public function testMap()

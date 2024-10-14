@@ -33,6 +33,11 @@ class ObjectStorage implements CollectionStorageInterface
         $this->list->attach($item);
     }
 
+    public function remove(CollectionItemInterface $item): void
+    {
+        $this->list->detach($item);
+    }
+
     public function count(): int
     {
         return $this->list->count();

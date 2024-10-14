@@ -257,4 +257,19 @@ class MappedCollection implements CollectionInterface, ArrayAccess
             $this->list[$indexKey] = $item;
         }
     }
+
+    public function remove(CollectionItemInterface $item): void
+    {
+        $indexForUnset = [];
+        foreach ($this->list as $i => $listItem) {
+            if ($listItem === $item) {
+                $indexForUnset[] = $i;
+            }
+        }
+
+        foreach ($indexForUnset as $i) {
+            unset($this->list[$i]);
+        }
+        unset($indexForUnset);
+    }
 }

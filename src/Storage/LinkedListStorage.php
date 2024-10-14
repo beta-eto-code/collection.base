@@ -33,6 +33,21 @@ class LinkedListStorage implements CollectionStorageInterface
         $this->list->push($item);
     }
 
+    public function remove(CollectionItemInterface $item): void
+    {
+        $indexForUnset = [];
+        foreach ($this->list as $i => $listItem) {
+            if ($listItem === $item) {
+                $indexForUnset[] = $i;
+            }
+        }
+
+        foreach ($indexForUnset as $i) {
+            unset($this->list[$i]);
+        }
+        unset($indexForUnset);
+    }
+
     public function count(): int
     {
         return $this->list->count();

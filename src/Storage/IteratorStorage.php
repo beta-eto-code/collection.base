@@ -25,7 +25,7 @@ class IteratorStorage extends ArrayStorage
             yield $item;
         }
 
-        if (empty($this->iterator)) {
+        if (is_null($this->iterator) || !$this->iterator->valid()) {
             return new EmptyIterator();
         }
 
@@ -37,5 +37,20 @@ class IteratorStorage extends ArrayStorage
         }
         $this->iterator = null;
         return new EmptyIterator();
+    }
+
+    public function remove(CollectionItemInterface $item): void
+    {
+        $this->loadItemsFromIterator();
+        parent::remove($item);
+    }
+
+    private function loadItemsFromIterator(): void
+    {
+        if (is_null($this->iterator) || !$this->iterator->valid()) {
+            return;
+        }
+
+        foreach ($this->getIterator() as $item) {}
     }
 }

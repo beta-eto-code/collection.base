@@ -2,12 +2,12 @@
 
 namespace Collection\Base\Tests\Benchmark;
 
-use Collection\Base\Interfaces\CollectionStorageInterface;
+use Collection\Base\Interfaces\CollectionInterface;
 
 class CollectionJsonSerialize extends BaseCollectionBenchmark
 {
-    protected function runBenchmark(CollectionStorageInterface $storage): void
+    protected function runBenchmark(CollectionInterface $collection): void
     {
-        $this->createCollection($storage, 300)->jsonSerialize();
+        $collection->jsonSerialize();
     }
 }

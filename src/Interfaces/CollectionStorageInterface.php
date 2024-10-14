@@ -13,4 +13,5 @@ interface CollectionStorageInterface extends IteratorAggregate, Countable
      */
     public function getIterator(): Iterator;
     public function append(CollectionItemInterface $item): void;
+    public function remove(CollectionItemInterface $item): void;
 }

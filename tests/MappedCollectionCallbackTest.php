@@ -3,6 +3,7 @@
 namespace Collection\Base\Tests;
 
 use Collection\Base\ArrayDataCollectionItem;
+use Collection\Base\GroupCollection;
 use Collection\Base\Interfaces\CollectionInterface;
 use Collection\Base\Interfaces\CollectionItemInterface;
 use Collection\Base\MappedCollectionCallback;
@@ -10,18 +11,9 @@ use Iterator;
 
 class MappedCollectionCallbackTest extends CollectionTest
 {
-    /**
-     * @param array $data
-     * @return MappedCollectionCallback
-     */
-    protected function initCollection(array $data): CollectionInterface
+    protected function createCollection(): CollectionInterface
     {
-        $list = [];
-        foreach ($data as $item) {
-            $list[] = new ArrayDataCollectionItem($item);
-        }
-
-        return new MappedCollectionCallback($list, function (CollectionItemInterface $item) {
+        return new MappedCollectionCallback([], function (CollectionItemInterface $item) {
             return '#' . $item->getValueByKey('id');
         });
     }

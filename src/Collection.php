@@ -234,6 +234,11 @@ class Collection implements CollectionInterface
         $this->storage->append($item);
     }
 
+    public function remove(CollectionItemInterface $item): void
+    {
+        $this->storage->remove($item);
+    }
+
     /**
      * @param string $key
      * @return GroupCollectionInterface[]|ReadableCollectionInterface

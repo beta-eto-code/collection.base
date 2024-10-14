@@ -9,9 +9,9 @@ class StorageAppend extends BaseBenchmark
 {
     protected function runBenchmark(CollectionStorageInterface $storage): void
     {
-        $size = 1000;
+        $size = 100;
         while ($size-- > 0) {
-            $index = 1000 - $size;
+            $index = 100 - $size;
             $storage->append(new ArrayDataCollectionItem(['id' => $index, 'value' => 'value' . $index]));
         }
     }
